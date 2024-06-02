@@ -15,7 +15,7 @@ const Post = ({ post }) => {
         </h5>
         <p className="card-text">{post.body}</p>
         <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          {post.reactions}
+          {post.reactions.likes}
         </span>
         {post.tags.map((tag) => (
           <span key={tag} className="badge text-bg-primary post-tag">
@@ -23,7 +23,13 @@ const Post = ({ post }) => {
           </span>
         ))}
       </div>
-      <img src={post.image} className="card-img-top" alt="Image of the Post" />
+      {post.image !== undefined && post.image !== "" && (
+        <img
+          src={post.image}
+          className="card-img-top"
+          alt="Image of the Post"
+        />
+      )}
     </div>
   );
 };
