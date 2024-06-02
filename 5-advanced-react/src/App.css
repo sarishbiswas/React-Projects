@@ -1,0 +1,18 @@
+.sidebar-container {
+  display: flex;
+  height: 100%;
+  min-height:fit-content;
+}
+.main-container {
+  width: 100%;
+}
+.post-container {
+  margin: 30px 50px;
+}
+.post-tag {
+  margin: 0px 3px;
+}
+.create-post-container {
+  width: 60%;
+  margin: 4% 20%;
+}
