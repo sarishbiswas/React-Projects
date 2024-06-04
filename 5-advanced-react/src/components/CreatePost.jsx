@@ -12,14 +12,19 @@ const CreatePost = () => {
   const { addPost } = useContext(postListContext);
   const handleAddpost = (event) => {
     event.preventDefault();
-    addPost(
-      userIdRef.current.value,
-      titleRef.current.value,
-      bodyRef.current.value,
-      reactionsRef.current.value,
-      tagsRef.current.value.split(" "),
-      imageRef.current.value
-    );
+    fetch("https://dummyjson.com/posts/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: titleRef.current.value,
+        body: bodyRef.current.value,
+        reactions: reactionsRef.current.value,
+        userId: userIdRef.current.value,
+        tags: tagsRef.current.value.split(" "),
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => addPost(res));
     userIdRef.current.value = "";
     titleRef.current.value = "";
     bodyRef.current.value = "";

@@ -1,9 +1,9 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 
 export const postListContext = createContext({
   postList: [],
   addPost: () => {},
-  addPosts: () => {},
+  dataFetched: false,
   deletePost: () => {},
 });
 
@@ -22,20 +22,11 @@ const postListReducer = (currentPostList, action) => {
 };
 const PostListProvider = ({ children }) => {
   const [postList, dispatchPostList] = useReducer(postListReducer, []);
-
-  const addPost = (userId, title, body, reactions, tags, image) => {
-    console.log(userId, title, body, reactions, tags, new Date());
+  const [dataFetched, setDataFecthed] = useState(false);
+  const addPost = (post) => {
     dispatchPostList({
       type: "ADD_POST",
-      payload: {
-        id: new Date(),
-        title: title,
-        body: body,
-        reactions: reactions,
-        userId: userId,
-        tags: tags,
-        image: image,
-      },
+      payload: post,
     });
   };
   const addPosts = (posts) => {
@@ -54,10 +45,21 @@ const PostListProvider = ({ children }) => {
       },
     });
   };
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch("https://dummyjson.com/posts", { signal })
+      .then((res) => res.json())
+      .then((data) => {
+        addPosts(data.posts);
+        setDataFecthed((prev) => !prev);
+      });
+    return () => controller.abort();
+  }, []);
 
   return (
     <postListContext.Provider
-      value={{ postList, addPost, addPosts, deletePost }}
+      value={{ postList, addPost, dataFetched, deletePost }}
     >
       {children}
     </postListContext.Provider>

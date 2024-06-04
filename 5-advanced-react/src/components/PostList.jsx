@@ -2,21 +2,15 @@ import { useContext } from "react";
 import Post from "./Post";
 import { postListContext } from "../store/post-list-store";
 import { useState } from "react";
+import { useEffect } from "react";
+import { Spinner } from "./Spinner";
 
 const PostList = () => {
-  const { postList, addPosts } = useContext(postListContext);
-  const [dataFetched, setDataFetched] = useState(false);
-  if (!dataFetched) {
-    fetch("https://dummyjson.com/posts")
-      .then((res) => res.json())
-      .then((data) => {
-        addPosts(data.posts);
-        setDataFetched(!dataFetched);
-      });
-  }
+  const { postList, dataFetched } = useContext(postListContext);
+
   return (
     <>
-      {postList.length === 0 && <h1>There are no Posts Available</h1>}
+      {!dataFetched && <Spinner />}
       {postList.map((post) => (
         <Post key={post.id} post={post} />
       ))}
